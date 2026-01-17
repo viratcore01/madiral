@@ -219,3 +219,11 @@
     transform-style: preserve-3d;
   }
 }
+
+/* Hide Lovable badge and related elements */
+#lovable-badge,
+.lovable-badge,
+[data-lovable],
+a[href*="lovable.dev"] {
+  display: none !important;
+}

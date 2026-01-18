@@ -93,6 +93,7 @@ const GetNotified = () => {
                 inputMode="tel"
                 autoComplete="tel"
                 placeholder="+1 (555) 123-4567"
+                required
                 className="bg-background border-border focus:border-primary h-12"
               />
             </div>

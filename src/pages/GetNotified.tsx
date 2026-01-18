@@ -106,9 +106,6 @@ const GetNotified = () => {
               <label htmlFor="phone" className="text-sm font-medium">
                 Phone Number
               </label>
-              <p className="text-xs text-muted-foreground">
-                Optional (for SMS updates)
-              </p>
               <Input
                 id="phone"
                 name="phone"

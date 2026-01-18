@@ -2,38 +2,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import { toast } from "sonner";
 import { ArrowLeft, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getFormSubmitUrl, FORMSUBMIT_EMAILS } from "@/config/formsubmit";
 
 const Contact = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success("Thank you! We'll get back to you soon.");
-      setFormData({ name: "", email: "", phone: "", message: "" });
-    }, 1500);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -71,7 +44,17 @@ const Contact = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form 
+            action={getFormSubmitUrl(FORMSUBMIT_EMAILS.CONTACT)}
+            method="POST"
+            className="space-y-6"
+          >
+            {/* FormSubmit hidden inputs */}
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_subject" value="New Contact Form Submission - MADIRAL" />
+            <input type="hidden" name="_template" value="box" />
+            <input type="hidden" name="_next" value="https://madiral.vercel.app/contact?success=true" />
+            
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium">
                 Full Name
@@ -81,8 +64,6 @@ const Contact = () => {
                 name="name"
                 type="text"
                 placeholder="John Doe"
-                value={formData.name}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -97,8 +78,6 @@ const Contact = () => {
                 name="email"
                 type="email"
                 placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -113,8 +92,6 @@ const Contact = () => {
                 name="phone"
                 type="tel"
                 placeholder="+1 (555) 123-4567"
-                value={formData.phone}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -129,8 +106,6 @@ const Contact = () => {
                 name="message"
                 placeholder="How can we help you?"
                 rows={5}
-                value={formData.message}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary resize-none"
               />
@@ -138,10 +113,9 @@ const Contact = () => {
 
             <Button
               type="submit"
-              disabled={isSubmitting}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 text-base font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300"
             >
-              {isSubmitting ? "Sending..." : "Send Message"}
+              Send Message
             </Button>
           </form>
         </motion.div>

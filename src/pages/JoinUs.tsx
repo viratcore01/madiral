@@ -3,51 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { toast } from "sonner";
 import { ArrowLeft, Users, Handshake } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getFormSubmitUrl, FORMSUBMIT_EMAILS } from "@/config/formsubmit";
 
 type UserType = "customer" | "partnership" | null;
 
 const JoinUs = () => {
   const [userType, setUserType] = useState<UserType>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-    location: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userType) {
-      toast.error("Please select whether you're a customer or interested in partnership");
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success(
-        userType === "customer"
-          ? "Thank you! We'll keep you updated about our services."
-          : "Thank you! We'll reach out about partnership opportunities."
-      );
-      setFormData({ name: "", email: "", phone: "", message: "", location: "" });
-      setUserType(null);
-    }, 1500);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -128,9 +91,17 @@ const JoinUs = () => {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              onSubmit={handleSubmit}
+              action={getFormSubmitUrl(FORMSUBMIT_EMAILS.JOIN_US)}
+              method="POST"
               className="space-y-6"
             >
+              {/* FormSubmit hidden inputs */}
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_subject" value={`New Join Us Form Submission - MADIRAL (${userType === "customer" ? "Customer" : "Partnership"})`} />
+              <input type="hidden" name="_template" value="box" />
+              <input type="hidden" name="_next" value="https://madiral.vercel.app/join-us?success=true" />
+              <input type="hidden" name="userType" value={userType} />
+              
               <div className="space-y-2">
                 <label htmlFor="name" className="text-sm font-medium">
                   Full Name
@@ -140,8 +111,6 @@ const JoinUs = () => {
                   name="name"
                   type="text"
                   placeholder="John Doe"
-                  value={formData.name}
-                  onChange={handleChange}
                   required
                   className="bg-background border-border focus:border-primary h-12"
                 />
@@ -156,8 +125,6 @@ const JoinUs = () => {
                   name="email"
                   type="email"
                   placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={handleChange}
                   required
                   className="bg-background border-border focus:border-primary h-12"
                 />
@@ -172,8 +139,6 @@ const JoinUs = () => {
                   name="phone"
                   type="tel"
                   placeholder="+1 (555) 123-4567"
-                  value={formData.phone}
-                  onChange={handleChange}
                   required
                   className="bg-background border-border focus:border-primary h-12"
                 />
@@ -189,8 +154,6 @@ const JoinUs = () => {
                     name="location"
                     type="text"
                     placeholder="Enter your location"
-                    value={formData.location}
-                    onChange={handleChange}
                     required
                     className="bg-background border-border focus:border-primary h-12"
                   />
@@ -210,8 +173,6 @@ const JoinUs = () => {
                       : "Tell us about your store and why you'd like to partner with us"
                   }
                   rows={4}
-                  value={formData.message}
-                  onChange={handleChange}
                   required={userType === "partnership"}
                   className="bg-background border-border focus:border-primary resize-none"
                 />
@@ -219,10 +180,9 @@ const JoinUs = () => {
 
               <Button
                 type="submit"
-                disabled={isSubmitting}
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 text-base font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300"
               >
-                {isSubmitting ? "Submitting..." : userType === "customer" ? "Join as Customer" : "Submit Partnership Interest"}
+                {userType === "customer" ? "Join as Customer" : "Submit Partnership Interest"}
               </Button>
             </motion.form>
           )}

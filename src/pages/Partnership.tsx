@@ -2,39 +2,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import { toast } from "sonner";
 import { ArrowLeft, Handshake } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getFormSubmitUrl, FORMSUBMIT_EMAILS } from "@/config/formsubmit";
 
 const Partnership = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    location: "",
-    message: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success("Thank you! We'll reach out about partnership opportunities.");
-      setFormData({ name: "", email: "", phone: "", location: "", message: "" });
-    }, 1500);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -72,7 +44,17 @@ const Partnership = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form 
+            action={getFormSubmitUrl(FORMSUBMIT_EMAILS.PARTNERSHIP)}
+            method="POST"
+            className="space-y-6"
+          >
+            {/* FormSubmit hidden inputs */}
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_subject" value="New Partnership Form Submission - MADIRAL" />
+            <input type="hidden" name="_template" value="box" />
+            <input type="hidden" name="_next" value="https://madiral.vercel.app/partnership?success=true" />
+            
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium">
                 Full Name
@@ -82,8 +64,6 @@ const Partnership = () => {
                 name="name"
                 type="text"
                 placeholder="John Doe"
-                value={formData.name}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -98,8 +78,6 @@ const Partnership = () => {
                 name="email"
                 type="email"
                 placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -114,8 +92,6 @@ const Partnership = () => {
                 name="phone"
                 type="tel"
                 placeholder="+1 (555) 123-4567"
-                value={formData.phone}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -130,8 +106,6 @@ const Partnership = () => {
                 name="location"
                 type="text"
                 placeholder="Enter your store location"
-                value={formData.location}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -146,8 +120,6 @@ const Partnership = () => {
                 name="message"
                 placeholder="Tell us about your store and why you'd like to partner with us"
                 rows={5}
-                value={formData.message}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary resize-none"
               />
@@ -155,10 +127,9 @@ const Partnership = () => {
 
             <Button
               type="submit"
-              disabled={isSubmitting}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 text-base font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300"
             >
-              {isSubmitting ? "Submitting..." : "Submit Partnership Interest"}
+              Submit Partnership Interest
             </Button>
           </form>
         </motion.div>

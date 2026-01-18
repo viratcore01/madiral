@@ -1,37 +1,11 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { toast } from "sonner";
 import { ArrowLeft, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getFormSubmitUrl, FORMSUBMIT_EMAILS } from "@/config/formsubmit";
 
 const GetNotified = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
-      toast.success("Thank you! We'll notify you when we launch.");
-      setFormData({ name: "", email: "", phone: "" });
-    }, 1500);
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -69,7 +43,17 @@ const GetNotified = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form 
+            action={getFormSubmitUrl(FORMSUBMIT_EMAILS.GET_NOTIFIED)}
+            method="POST"
+            className="space-y-6"
+          >
+            {/* FormSubmit hidden inputs */}
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_subject" value="New Get Notified Submission - MADIRAL" />
+            <input type="hidden" name="_template" value="box" />
+            <input type="hidden" name="_next" value="https://madiral.vercel.app/get-notified?success=true" />
+            
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium">
                 Full Name
@@ -79,8 +63,6 @@ const GetNotified = () => {
                 name="name"
                 type="text"
                 placeholder="John Doe"
-                value={formData.name}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -95,8 +77,6 @@ const GetNotified = () => {
                 name="email"
                 type="email"
                 placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleChange}
                 required
                 className="bg-background border-border focus:border-primary h-12"
               />
@@ -113,18 +93,15 @@ const GetNotified = () => {
                 inputMode="tel"
                 autoComplete="tel"
                 placeholder="+1 (555) 123-4567"
-                value={formData.phone}
-                onChange={handleChange}
                 className="bg-background border-border focus:border-primary h-12"
               />
             </div>
 
             <Button
               type="submit"
-              disabled={isSubmitting}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-14 text-base font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300"
             >
-              {isSubmitting ? "Submitting..." : "Get Notified"}
+              Get Notified
             </Button>
           </form>
 

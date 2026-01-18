@@ -4,16 +4,16 @@
 
 export const FORMSUBMIT_EMAILS = {
   // Email for Get Notified form submissions
-  GET_NOTIFIED: "your-email@example.com",
+  GET_NOTIFIED: "madiral.system@gmail.com",
   
   // Email for Contact form submissions
-  CONTACT: "your-email@example.com",
+  CONTACT: "madiral.system@gmail.com",
   
   // Email for Join Us form submissions
-  JOIN_US: "your-email@example.com",
+  JOIN_US: "madiral.system@gmail.com",
   
   // Email for Partnership form submissions
-  PARTNERSHIP: "your-email@example.com",
+  PARTNERSHIP: "madiral.system@gmail.com",
 } as const;
 
 // Base FormSubmit URL
